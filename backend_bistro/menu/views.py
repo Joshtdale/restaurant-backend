@@ -25,12 +25,18 @@ def menu_item(request):
     data = []
     items = list(MenuItem.objects.all())
     for item in items:
+        cat = Category.objects.get(id = item.category_id)
+        cui = Cuisine.objects.get(id = item.cuisine_id)
         data.append({
             'title': item.title,
-            'category': model_to_dict(Category.objects.get(id = item.category_id)),
-            "cuisine": model_to_dict(Cuisine.objects.get(id = item.cuisine_id)),
+            'category': {
+                'title': cat.title,
+                'uppercase_title': cat.title.upper()
+            },
+            "cuisine": model_to_dict(cui, exclude=['id']),
             "description": item.description,
-            "price": item.price
+            "price": item.price,
+            'Spicy_level': item.spicy
         })
 
     return JsonResponse(data, safe=False)
