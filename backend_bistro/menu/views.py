@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import json
-from .models import MenuItem
+from .models import MenuItem, Category, Cuisine
 from pprint import pprint
+from django.forms.models import model_to_dict
 
 def some_view(request):
     data = list(SomeModel.objects.values())
@@ -21,6 +22,24 @@ def some_view(request):
     # return HttpResponse('Books be workin\'')
 
 def menu_item(request):
+    data = []
+    items = list(MenuItem.objects.all())
+    for item in items:
+        cat = Category.objects.get(id = item.category_id)
+        cui = Cuisine.objects.get(id = item.cuisine_id)
+        data.append({
+            'title': item.title,
+            'category': {
+                'title': cat.title,
+                'uppercase_title': cat.title.upper()
+            },
+            "cuisine": model_to_dict(cui, exclude=['id']),
+            "description": item.description,
+            "price": item.price,
+            'Spicy_level': item.spicy
+        })
+
+    return JsonResponse(data, safe=False)
     # data = list(MenuItem.objects.values(
         # title = MenuItem.title,
         # category = MenuItem.category.title,
@@ -29,12 +48,11 @@ def menu_item(request):
         # "price": self.price
     # ))
     # print(MenuItem.title)
-    menuItems = [i.json() for i in MenuItem.objects.all()]
+    # menuItems = [i.json() for i in MenuItem.objects.all()]
     # for item in menuItems:
     #     print(item)
-    return HttpResponse(json.dumps(menuItems), content_type='application/json')
+    # return HttpResponse(json.dumps(menuItems), content_type='application/json')
 
-    # return JsonResponse(data, safe=False)
 
 # def books_by_year(request, year):
 #     books = list(Book.objects.filter(published_year=year).values())
