@@ -21,6 +21,36 @@ def some_view(request):
 
     # return HttpResponse('Books be workin\'')
 
+def menu_item_title(request):
+    data = list(MenuItem.objects.values(
+        'title'
+    ))
+    return JsonResponse(data, safe=False)
+
+def menu_item_cuisine(request, title):
+    # data = list(MenuItem.objects.filter(cuisine_id=cuisine).values())
+    data = []
+    items = list(list(MenuItem.objects.filter(Cuisine.objects.get(id = item.cuisine_id)==title).values()))
+    for item in items:
+        cat = Category.objects.get(id = item.category_id)
+        print(cat)
+        cui = Cuisine.objects.get(id = item.cuisine_id)
+        data.append({
+            'title': item.title,
+            'category': {
+                'title': cat.title,
+                'uppercase_title': cat.title.upper()
+            },
+            "cuisine": model_to_dict(cui, exclude=['id']),
+            "description": item.description,
+            "price": item.price,
+            'Spicy_level': item.spicy
+        })
+
+    return JsonResponse(data, safe=False)
+
+
+
 def menu_item(request):
     data = []
     items = list(MenuItem.objects.all())
