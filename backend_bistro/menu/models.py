@@ -23,6 +23,9 @@ class MenuItem(models.Model):
     price = models.FloatField(null=True, blank=True)
     # author = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.title
+
     def json(self):
         newCategory = {
             'title': self.category.title
@@ -38,6 +41,5 @@ class MenuItem(models.Model):
         
         }
 
-    # def __str__(self):
-    #     return self.title
+    
 
