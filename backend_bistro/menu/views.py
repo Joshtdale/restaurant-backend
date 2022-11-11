@@ -122,7 +122,6 @@ def menu_item(request):
     return JsonResponse(data, safe=False)
 
 def menu_cvs(request):
-    # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(
         content_type='text/csv',
         headers={'Content-Disposition': 'attachment; filename="Menu.csv"'},
