@@ -47,7 +47,13 @@ def menu_item_cuisine_id(request, title):
             # 'ingredients': model_to_dict(ing),
             "description": item.description,
             "price": item.price,
-            'Spicy_level': item.spicy
+            'Spicy_level': item.spicy,
+            'ingredients': {
+                'name': list(item.ingredients.values())
+            },
+            'location': {
+                'name': list(item.restaurant.values())
+                }
         })
     return JsonResponse(data, safe=False)
 
@@ -75,7 +81,13 @@ def menu_item_category(request, title):
             "cuisine": model_to_dict(cui, exclude=['id']),
             "description": item.description,
             "price": item.price,
-            'Spicy_level': item.spicy
+            'Spicy_level': item.spicy,
+            'ingredients': {
+                'name': list(item.ingredients.values())
+            },
+            'location': {
+                'name': list(item.restaurant.values())
+                }
         })
 
 

@@ -40,20 +40,5 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.title
 
-    # def json(self):
-    #     newCategory = {
-    #         'title': self.category.title
-    #     }
-    #     # print(self.cuisine.title)
-    #     return {
-    #     'title': self.title,
-    #     # 'category': self.category.title,
-    #     'category': newCategory,
-    #     "cuisine": self.cuisine.title,
-    #     "description": self.description,
-    #     "price": self.price
-        
-    #     }
-
     
 
