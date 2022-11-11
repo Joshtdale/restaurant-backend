@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-import json
+import json, csv
 from .models import MenuItem, Category, Cuisine, Ingredients
 from pprint import pprint
 from django.forms.models import model_to_dict
@@ -104,7 +104,10 @@ def menu_item(request):
             'Spicy_level': item.spicy,
             'ingredients': {
                 'name': list(item.ingredients.values())
-            }
+            },
+            'location': {
+                'name': list(item.restaurant.values())
+                }
             # for i in ingredient:
             #     'name': i.name
             # }
@@ -117,30 +120,18 @@ def menu_item(request):
         })
 
     return JsonResponse(data, safe=False)
-    # data = list(MenuItem.objects.values(
-        # title = MenuItem.title,
-        # category = MenuItem.category.title,
-        # "cuisine": self.cuisine.title,
-        # "description": self.description,
-        # "price": self.price
-    # ))
-    # print(MenuItem.title)
-    # menuItems = [i.json() for i in MenuItem.objects.all()]
-    # for item in menuItems:
-    #     print(item)
-    # return HttpResponse(json.dumps(menuItems), content_type='application/json')
 
+def menu_cvs(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="Menu.csv"'},
+    )
 
-# def books_by_year(request, year):
-#     books = list(Book.objects.filter(published_year=year).values())
-#     print(books)
-#     if len(books) > 0:
-#         return JsonResponse({'data': books})
-#     else:
-#         return HttpResponse('Nope')
+    items = MenuItem.objects.all()
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Descriptions', 'Price'])
+    for item in items:
+        writer.writerow([item.title, item.description, item.price])
 
-    # return HttpResponse('You be at the year index.')
-
-# def books_by_title(request, letter):
-#     # print(letter)
-#     return HttpResponse(f'letter is {letter}')
+    return response
